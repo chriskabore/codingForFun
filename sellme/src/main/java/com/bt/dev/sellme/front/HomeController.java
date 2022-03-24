@@ -1,29 +1,21 @@
 package com.bt.dev.sellme.front;
 
 import com.bt.dev.sellme.cart.Cart;
-import com.bt.dev.sellme.cart.CartRepository;
 import com.bt.dev.sellme.cart.CartService;
 import com.bt.dev.sellme.item.InventoryService;
-import com.bt.dev.sellme.item.ItemRepository;
+import com.bt.dev.sellme.item.Item;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HomeController {
 
-	private ItemRepository itemRepository;
-	private CartRepository cartRepository;
-	private CartService cartService;
 	private InventoryService inventoryService;
+	private CartService cartService;
 	
-	public HomeController(ItemRepository itemRepository, CartRepository cartRepository, CartService cartService,
-	                      InventoryService inventoryService){
-		this.cartRepository = cartRepository;
-		this.itemRepository = itemRepository;
+	
+	public HomeController(InventoryService inventoryService, CartService cartService){
 		this.cartService = cartService;
 		this.inventoryService = inventoryService;
 	}
@@ -31,14 +23,35 @@ public class HomeController {
 	@GetMapping ("/")
 	public String home(Model model){
 		
-		model.addAttribute("items", this.itemRepository.findAll());
-		model.addAttribute("cart", this.cartRepository.findById("My Cart").orElseGet(()->new Cart("My Cart")));
+		model.addAttribute("items", this.inventoryService.getInventory());
+		model.addAttribute("cart", this.cartService.getCart("My Cart").orElseGet(()->new Cart("My Cart")));
+		
+		this.inventoryService.getInventory().forEach(System.out::println);
 	 return "home";
 	}
+	
 	
 	@PostMapping("/add/{id}")
 	public String addToCart(@PathVariable Integer id){
 		this.cartService.addToCart("My Cart",id);
+		return "redirect:/";
+	}
+	
+	@DeleteMapping("/remove/{id}")
+	public String removeFromCart(@PathVariable Integer id) {
+		this.inventoryService.removeOneFromCart("My Cart", id);
+		return "redirect:/";
+	}
+	
+	@PostMapping
+	public String createItem(@RequestBody Item newItem) {
+		this.inventoryService.saveItem(newItem);
+		return "redirect:/";
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public String deleteItem(@PathVariable Integer id) {
+		this.inventoryService.deleteItem(id);
 		return "redirect:/";
 	}
 	

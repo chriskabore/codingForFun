@@ -34,6 +34,7 @@
                     <form th:method="delete" th:action="@{'/delete/' + ${item.id}}">
                         <input type="submit" value="Delete"/>
                     </form>
+
                 </td>
             </tr>
         </tbody>
@@ -46,6 +47,7 @@
                 <th>Nom</th>
                 <th>Prix</th>
                 <th>Quantité</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -54,6 +56,11 @@
                 <td th:text="${cartItem.item.name}"></td>
                 <td th:text="${cartItem.item.price}"></td>
                 <td th:text="${cartItem.quantity}"></td>
+                <td>
+                    <form th:method="delete" th:action="@{'/remove/' + ${cartItem.item.id}}">
+                        <input type="submit" value="Remove one" />
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>

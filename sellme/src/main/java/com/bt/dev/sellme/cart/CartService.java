@@ -5,6 +5,8 @@ import com.bt.dev.sellme.item.Item;
 import com.bt.dev.sellme.item.ItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CartService {
 	
@@ -14,6 +16,10 @@ public class CartService {
 	public CartService (CartRepository cartRepository , ItemRepository itemRepository){
 		this.cartRepository = cartRepository;
 		this.itemRepository = itemRepository;
+	}
+	
+	public Optional<Cart> getCart(String cartId) {
+		return this.cartRepository.findById(cartId);
 	}
 	
 	public Cart addToCart(String cartId, Integer itemId){
