@@ -12,6 +12,11 @@ public class Item {
 	@GeneratedValue
 	Integer id;
 	private String name;
+	private String description;
+	private int price;
+	
+	public Item(String name, String description, int i) {
+	}
 	
 	public Integer getId() {
 		return id;
@@ -29,7 +34,15 @@ public class Item {
 		this.name = name;
 	}
 	
-	public double getPrice() {
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public int getPrice() {
 		return price;
 	}
 	
@@ -37,7 +50,7 @@ public class Item {
 		this.price = price;
 	}
 	
-	private int price;
+
 	
 	protected Item() {}
 	
