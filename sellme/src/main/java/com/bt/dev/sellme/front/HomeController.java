@@ -51,7 +51,12 @@ public class HomeController {
 	
 	@DeleteMapping("/delete/{id}")
 	public String deleteItem(@PathVariable Integer id) {
-		this.inventoryService.deleteItem(id);
+		try{
+			this.inventoryService.deleteItem(id);
+		}catch(Exception e){
+			System.err.println("Could not delete Item:"+id);
+		}
+
 		return "redirect:/";
 	}
 	

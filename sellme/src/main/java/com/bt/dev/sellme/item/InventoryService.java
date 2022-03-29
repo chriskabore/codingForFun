@@ -57,8 +57,8 @@ public class InventoryService {
 		return this.cartRepository.save(cart);
 	}
 	
-	public Optional<Cart> getCart(String cartId) {
-		return this.cartRepository.findById(cartId);
+	public Optional<Item> getItem(Integer itemId) {
+		return this.itemByExampleRepository.findById(itemId);
 	}
 	
 	public Iterable<Item> getInventory() {
@@ -69,8 +69,14 @@ public class InventoryService {
 		return this.itemRepository.save(newItem);
 	}
 	
-	public void deleteItem(Integer id) {
-		this.itemRepository.deleteById(id);
+	public void deleteItem(Integer id) throws Exception {
+		Optional<Item> itemToDelete = this.itemRepository.findById(id);
+		if(itemToDelete.isPresent()){
+			this.itemRepository.delete(itemToDelete.get());
+		}else {
+			throw new Exception("Can't find Item  "+ id );
+		}
+		
 	}
 	
 	public Cart removeOneFromCart(String cartId, Integer itemId) {

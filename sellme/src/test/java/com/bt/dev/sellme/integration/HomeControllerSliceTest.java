@@ -1,6 +1,7 @@
 package com.bt.dev.sellme.integration;
 
 import com.bt.dev.sellme.cart.Cart;
+import com.bt.dev.sellme.cart.CartService;
 import com.bt.dev.sellme.item.InventoryService;
 import com.bt.dev.sellme.item.Item;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,8 @@ public class HomeControllerSliceTest {
 	
 	@MockBean
 	InventoryService inventoryService;
+	@MockBean
+	CartService cartService;
 	
 	@BeforeEach
 	public void setUp(@Autowired MockMvc mockMvc){
@@ -41,7 +44,7 @@ public class HomeControllerSliceTest {
 				new Item(2,"name2", "desc2",3000)
 		));
 		
-		when(inventoryService.getCart("My Cart"))
+		when(cartService.getCart("My Cart"))
 				.thenReturn(Optional.of(new Cart("My Cart")));
 		
 		client.get().uri("/").exchange()
