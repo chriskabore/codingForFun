@@ -5,6 +5,20 @@
     <title>Sell Me!</title>
 </head>
 <body>
+    <table>
+        <tr>
+            <td>Nom:</td>
+            <td th:text="${auth.name}"></td>
+        </tr>
+        <tr>
+            <td>Privilèges:</td>
+            <td th:text="${auth.authorities}"></td>
+        </tr>
+    </table>
+    <form action="/logout" method="post">
+        <input type="submit" value="Logout">
+    </form>
+    <hr/>
     <h1> Bienvenue sur Sell Me</h1>
 
     <p>

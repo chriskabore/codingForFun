@@ -63,7 +63,7 @@ public class Item {
 	
 
 	
-	protected Item() {}
+	public Item() {}
 	
 	public Item(String name, int price) {
 		this.name = name;

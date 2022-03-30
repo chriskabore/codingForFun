@@ -69,12 +69,10 @@ public class InventoryService {
 		return this.itemRepository.save(newItem);
 	}
 	
-	public void deleteItem(Integer id) throws Exception {
+	public void deleteItem(Integer id) {
 		Optional<Item> itemToDelete = this.itemRepository.findById(id);
 		if(itemToDelete.isPresent()){
 			this.itemRepository.delete(itemToDelete.get());
-		}else {
-			throw new Exception("Can't find Item  "+ id );
 		}
 		
 	}
@@ -93,4 +91,8 @@ public class InventoryService {
 		
 		return this.cartRepository.save(cart);
 	}
+
+    public Optional<Item> getItemByName(String name) {
+		return this.itemRepository.findByName(name);
+    }
 }

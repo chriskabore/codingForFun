@@ -4,6 +4,7 @@ import com.bt.dev.sellme.cart.Cart;
 import com.bt.dev.sellme.cart.CartService;
 import com.bt.dev.sellme.item.InventoryService;
 import com.bt.dev.sellme.item.Item;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,31 +22,33 @@ public class HomeController {
 	}
 	
 	@GetMapping ("/")
-	public String home(Model model){
+	public String home(Authentication auth, Model model){
 		
 		model.addAttribute("items", this.inventoryService.getInventory());
-		model.addAttribute("cart", this.cartService.getCart("My Cart").orElseGet(()->new Cart("My Cart")));
-		
+		model.addAttribute("cart", this.cartService.getCart(cartName(auth)).orElseGet(()->new Cart(cartName(auth))));
+		model.addAttribute("auth", auth);
 		this.inventoryService.getInventory().forEach(System.out::println);
-	 return "home";
+	 	return "home";
 	}
-	
+
+
 	
 	@PostMapping("/add/{id}")
-	public String addToCart(@PathVariable Integer id){
-		this.cartService.addToCart("My Cart",id);
+	public String addToCart(Authentication auth,@PathVariable Integer id){
+		this.cartService.addToCart(cartName(auth),id);
 		return "redirect:/";
 	}
 	
 	@DeleteMapping("/remove/{id}")
-	public String removeFromCart(@PathVariable Integer id) {
-		this.inventoryService.removeOneFromCart("My Cart", id);
+	public String removeFromCart(Authentication auth,@PathVariable Integer id) {
+		this.inventoryService.removeOneFromCart(cartName(auth), id);
 		return "redirect:/";
 	}
 	
-	@PostMapping
-	public String createItem(@RequestBody Item newItem) {
-		this.inventoryService.saveItem(newItem);
+	@PostMapping("/create")
+	public String createItem(@RequestBody Item newItem, Model model) {
+		Item savedItem = this.inventoryService.saveItem(newItem);
+		model.addAttribute("savedItem", savedItem);
 		return "redirect:/";
 	}
 	
@@ -68,5 +71,9 @@ public class HomeController {
 		
 		model.addAttribute("results", inventoryService.searchByExample(name, description, useAnd));
 		return "home";
+	}
+
+	private static String cartName(Authentication auth) {
+		return auth.getName() + "'s Cart";
 	}
 }
